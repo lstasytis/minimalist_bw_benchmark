@@ -31,11 +31,6 @@ void run_test(std::size_t N, const char *label) {
     double *b = static_cast<double*>(aligned_alloc64(bytes));
     double *c = static_cast<double*>(aligned_alloc64(bytes));
 
-    if (!a || !b || !c) {
-        std::fprintf(stderr, "Allocation failed for %s (N=%zu)\n", label, N);
-        std::exit(EXIT_FAILURE);
-    }
-
     #pragma omp parallel for
     for (std::size_t i = 0; i < N; ++i) { a[i] = 1.0; b[i] = 2.0; c[i] = 0.0; }
 
@@ -46,7 +41,7 @@ void run_test(std::size_t N, const char *label) {
     e.startCounters();
 
     do {
-        #pragma omp parallel for // <--- comment/uncomment
+        #pragma omp parallel for // <--- comment/uncomment for funny results
         for (std::size_t i = 0; i < N; ++i) {
             c[i] = a[i] + b[i];
         }
@@ -68,8 +63,7 @@ void run_test(std::size_t N, const char *label) {
 }
 
 int main() {
-    //omp_set_num_threads(1);
-    omp_set_num_threads(omp_get_max_threads()); // <--- comment/uncomment
+    omp_set_num_threads(omp_get_max_threads());
 
     run_test(N_L1, "L1 Test");
     run_test(N_L2, "L2 Test");
