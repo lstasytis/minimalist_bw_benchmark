@@ -25,9 +25,6 @@ if [ "$mode" == "3" ]; then
 fi
 
 perf stat ./bw_test
-perf report
-
-
 
 # useful commands to look at
 # lscpu
