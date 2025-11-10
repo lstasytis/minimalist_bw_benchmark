@@ -36,7 +36,7 @@ void run_test(std::size_t N, const char *label) {
     for (std::size_t i = 0; i < N; ++i) { a[i] = 1.0; b[i] = 2.0; c[i] = 0.0; }
 
     double t0 = seconds();
-    double t1 = t0;
+    double t1;
     std::size_t repeats = 0;
     PerfEvent e;
     
@@ -44,6 +44,7 @@ void run_test(std::size_t N, const char *label) {
 
     std::jthread worker([&](std::stop_token stoken) {
         e.startCounters();
+        t1 = t0;
         while (!stoken.stop_requested()) {
         // v1
             #pragma omp parallel for // <--- comment/uncomment for funny results
